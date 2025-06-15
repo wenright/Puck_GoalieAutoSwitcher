@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using HarmonyLib;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace GoalieAutoSwitcher
@@ -15,6 +16,8 @@ namespace GoalieAutoSwitcher
       [HarmonyPrefix]
       public static void Postfix(Puck __instance)
       {
+        if (!NetworkManager.Singleton.IsServer) return;
+        
         // We only want to enable switching if there are an odd number of players, and only 1 goalie
         List<Player> players = PlayerManager.Instance.GetPlayers().FindAll(player => player.Team.Value == PlayerTeam.Blue ||  player.Team.Value == PlayerTeam.Red);
         List<Player> goalies = players.FindAll(player => player.Role.Value == PlayerRole.Goalie);
